@@ -1,0 +1,47 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "version" : "1.0",
+    "title" : "Summary about the new REST service.",
+    "description" : "Summary about the new REST service."
+  },
+  "host" : "localhost:5789",
+  "basePath" : "/",
+  "schemes" : [ "http" ],
+  "paths" : {
+    "/fullname" : {
+      "get" : {
+        "description" : "",
+        "operationId" : "get-fullname",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ ],
+        "responses" : {
+          "200" : {
+            "description" : "a Fullname to be returned",
+            "schema" : {
+              "$ref" : "#/definitions/Fullname"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "Fullname" : {
+      "type" : "object",
+      "required" : [ "middle", "last", "First" ],
+      "properties" : {
+        "First" : {
+          "type" : "string"
+        },
+        "middle" : {
+          "type" : "string"
+        },
+        "last" : {
+          "type" : "string"
+        }
+      }
+    }
+  }
+}

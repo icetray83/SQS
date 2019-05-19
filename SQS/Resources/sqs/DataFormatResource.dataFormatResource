@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jndi:namedResource xmi:version="2.0" xmlns:xmi="http://www.omg.org/XMI" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:NewXMLSchema="http://www.example.org/NewXMLSchema" xmlns:dataformat="http://ns.tibco.com/bw/palette/dataformat" xmlns:jndi="http://xsd.tns.tibco.com/amf/models/sharedresource/jndi" xmi:id="_j-umQW9rEemXdfxAeNk7vA" name="sqs.DataFormatResource" type="dataformat:DataFormat">
+  <imports xmi:id="_oysEgG9rEemXdfxAeNk7vA" importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/NewXMLSchema"/>
+  <jndi:configuration xsi:type="dataformat:DataFormat" xmi:id="_j_aiwG9rEemXdfxAeNk7vA" formatType="Delimiter separated" colSeparator="," colSeparatorParseRule="Treat all characters as entered as a single column separator string" lineSeparator="New Line" fillCharacter="Space" schemaElementQName="NewXMLSchema:Fullname" fieldOffsetsStr="First(0,0)&#xA;middle(0,0)&#xA;last(0,0)">
+    <fieldOffsets xmi:id="_o1YMIG9rEemXdfxAeNk7vA" name="First"/>
+    <fieldOffsets xmi:id="_o1YMIW9rEemXdfxAeNk7vA" name="middle"/>
+    <fieldOffsets xmi:id="_o1YMIm9rEemXdfxAeNk7vA" name="last"/>
+  </jndi:configuration>
+</jndi:namedResource>

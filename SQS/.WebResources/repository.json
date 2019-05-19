@@ -1,0 +1,13 @@
+{
+    "records": [],
+    "resources": [
+        {
+            "location": "Service Descriptors/sqs.RestService-Resource.json",
+            "type": "generated"
+        },
+        {
+            "location": "Service Descriptors/sqs.restService-Fullname.json",
+            "type": "generated"
+        }
+    ]
+}

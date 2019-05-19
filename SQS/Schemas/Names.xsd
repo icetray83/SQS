@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<schema xmlns="http://www.w3.org/2001/XMLSchema" targetNamespace="http://www.example.org/NewXMLSchema" xmlns:tns="http://www.example.org/NewXMLSchema" elementFormDefault="qualified">
+
+
+
+
+    <element name="First" type="string"></element>
+
+    <element name="middle" type="string"></element>
+
+    <element name="last" type="string"></element>
+
+    <element name="Fullname" type="tns:Fullnametype"></element>
+    
+    <complexType name="Fullnametype">
+    	<sequence>
+    		<element ref="tns:First"></element>
+    		<element ref="tns:middle"></element>
+    		<element ref="tns:last"></element>
+    	</sequence>
+    </complexType>
+</schema>

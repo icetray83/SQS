@@ -1,0 +1,989 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<bpws:process exitOnStandardFault="no" name="sqs.Sender"
+    suppressJoinFailure="yes"
+    targetNamespace="http://xmlns.example.com/20190505122644"
+    xmlns:bpws="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
+    xmlns:info="http://www.tibco.com/bw/process/info"
+    xmlns:ns="http://www.tibco.com/pe/EngineTypes"
+    xmlns:ns0="http://www.tibco.com/namespaces/tnt/plugins/generalactivities/mapper/1557081059888"
+    xmlns:ns1="activity.jsonRender.output+1986c18b-0759-4379-856c-8826e035cb17+ActivityOutputType"
+    xmlns:ns2="http://www.tibco.tci.com/SQSSchema"
+    xmlns:ns3="http://www.tibco.com/namespaces/tnt/plugins/generalactivities/mapper/1557081739880"
+    xmlns:ns4="http://www.example.org/NewXMLSchema"
+    xmlns:ns5="activity.jsonRender.output+8a59d4ee-5ea9-4959-9530-82bf305c9913+ActivityOutputType"
+    xmlns:ns6="http://tns.tibco.com/bw/activity/parse/xsd/+51fdfb96-a930-4c49-8241-1a9194b02996+input"
+    xmlns:ns7="http://tns.tibco.com/bw/activity/parse/xsd/+51fdfb96-a930-4c49-8241-1a9194b02996+output"
+    xmlns:ns8="http://tns.tibco.com/bw/activity/timer/xsd/output"
+    xmlns:sca="http://docs.oasis-open.org/ns/opencsa/sca/200912"
+    xmlns:sca-bpel="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"
+    xmlns:tibex="http://www.tibco.com/bpel/2007/extensions"
+    xmlns:tibprop="http://ns.tibco.com/bw/property" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <tibex:Types>
+        <xs:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.com/pe/EngineTypes"
+            xmlns:tns="http://www.tibco.com/pe/EngineTypes" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="ErrorReport">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Class" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="OptionalErrorReport">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Class" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="FaultDetail">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ActivityName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0" name="Data" type="tns:anydata"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Msg" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="MsgCode" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessStack" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="StackTrace" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="FullClass" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="Class" type="xs:string"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="ProcessContext">
+                <xs:sequence>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="JobId" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ApplicationName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="EngineName" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" name="ProcessInstanceId" type="xs:string"/>
+                    <xs:element
+                        block="extension restriction substitution"
+                        form="unqualified" minOccurs="0"
+                        name="CustomJobId" type="xs:string"/>
+                    <!--xs:element name="RestartedFromCheckpoint" form="unqualified" block="extension restriction substitution" type="xs:boolean"/-->
+                    <!--xs:element minOccurs="0" maxOccurs="unbounded" name="TrackingInfo" form="unqualified" block="extension restriction substitution" type="xs:string"/-->
+                </xs:sequence>
+            </xs:complexType>
+            <xs:complexType block="extension restriction"
+                final="extension restriction" name="anydata">
+                <xs:sequence>
+                    <xs:any namespace="##any" processContents="lax"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="OptionalErrorReport" type="tns:OptionalErrorReport"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="ErrorReport" type="tns:ErrorReport"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="FaultDetail" type="tns:FaultDetail"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="ProcessContext" type="tns:ProcessContext"/>
+            <xs:element block="extension restriction substitution"
+                final="extension restriction" name="CorrelationValue" type="xs:string"/>
+        </xs:schema>
+        <schema attributeFormDefault="unqualified"
+            elementFormDefault="unqualified"
+            targetNamespace="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions"
+            version="" xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://schemas.tibco.com/bw/pe/plugin/5.0/exceptions">
+            <complexType name="ActivityExceptionType">
+                <sequence>
+                    <element name="msg" type="string"/>
+                    <element minOccurs="0" name="msgCode" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ActivityException" type="tns:ActivityExceptionType"/>
+            <complexType name="ActivityTimedOutExceptionType">
+                <complexContent>
+                    <extension base="tns:ActivityExceptionType"/>
+                </complexContent>
+            </complexType>
+            <element name="ActivityTimedOutException" type="tns:ActivityTimedOutExceptionType"/>
+        </schema>
+        <schema elementFormDefault="qualified"
+            targetNamespace="http://www.tibco.tci.com/SQSSchema"
+            xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://www.tibco.tci.com/SQSSchema">
+            <complexType name="SQSExceptionType">
+                <sequence>
+                    <element name="ErrorCode" type="string"/>
+                    <element name="ErrorMessage" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="SqsExcepton" type="tns:SQSExceptionType"/>
+            <complexType name="RecMessageType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="SenderId" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MessageId" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="SentTimeStamp" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="Body" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="MessageGroupId" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="MessageDeduplicationId" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="SequenceNumber" type="string"/>
+                    <element maxOccurs="10" minOccurs="0"
+                        name="MessageAttrs" type="tns:MessageAttributeType"/>
+                </sequence>
+            </complexType>
+            <complexType name="ListQueuesResultType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="QueueUrl" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessages" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessagesNotVisible" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="VisibilityTimeout" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="CreatedTimestamp" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="LastModifiedTimestamp" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="Policy" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MaximumMessageSize" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MessageRetentionPeriod" type="int"/>
+                    <element maxOccurs="1" minOccurs="1" name="QueueArn" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessagesDelayed" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="DelaySeconds" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ReceiveMessageWaitTimeSeconds" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="RedrivePolicy" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetOutputMessageType">
+                <sequence>
+                    <element maxOccurs="10" minOccurs="1"
+                        name="SqsMessage" type="tns:RecMessageType"/>
+                </sequence>
+            </complexType>
+            <complexType name="RecOutputMessageType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="SqsMessage" type="tns:RecMessageType"/>
+                </sequence>
+            </complexType>
+            <complexType name="PutInputMessageType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1" name="Body" type="string"/>
+                    <element maxOccurs="10" minOccurs="0"
+                        name="MessageAttrs" type="tns:MessageAttributeType"/>
+                </sequence>
+            </complexType>
+            <complexType name="PutInputBatchType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="MessageGroupId" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="MessageDeduplicationId" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="SqsMessage" type="tns:PutInputMessageType"/>
+                </sequence>
+            </complexType>
+            <complexType name="PublishInputType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0" name="TopicARN" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="TargetARN" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="Subject" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="MessageStructure" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="PhoneNumber" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="SnsMessage" type="tns:PutInputMessageType"/>
+                </sequence>
+            </complexType>
+            <complexType name="DeleteQueueInType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="InquireQueueInType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ViewAllQueuesInType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="RegionName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="QueueNamePrefix" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="CreateQueueInType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="FIFOQueue" type="boolean"/>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="ContentBasedDeduplication" type="boolean"/>
+                    <element maxOccurs="1" minOccurs="0" name="DelaySeconds">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="0"/>
+                                <maxInclusive value="900"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="MaximumMessageSize">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="1024"/>
+                                <maxInclusive value="262144"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="MessageRetentionPeriod">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="60"/>
+                                <maxInclusive value="1209600"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="Policy" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="ReceiveMessageWaitTimeSeconds">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="0"/>
+                                <maxInclusive value="20"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0"
+                        name="RedrivePolicy" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="VisibilityTimeout">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="0"/>
+                                <maxInclusive value="43200"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="Permissions" type="tns:PermissionsType"/>
+                </sequence>
+            </complexType>
+            <complexType name="CreateQueueOutType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="QueueUrl" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="InquireQueueOutType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="QueueUrl" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessages" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessagesNotVisible" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="VisibilityTimeout" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="CreatedTimestamp" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="LastModifiedTimestamp" type="string"/>
+                    <element maxOccurs="1" minOccurs="1" name="Policy" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MaximumMessageSize" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MessageRetentionPeriod" type="int"/>
+                    <element maxOccurs="1" minOccurs="1" name="QueueArn" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ApproximateNumberOfMessagesDelayed" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="DelaySeconds" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ReceiveMessageWaitTimeSeconds" type="int"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="RedrivePolicy" type="string"/>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="ContentBasedDeduplication" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="ViewAllQueuesOutType">
+                <sequence>
+                    <element maxOccurs="1000" minOccurs="0"
+                        name="ListQueuesResult" type="tns:ListQueuesResultType"/>
+                </sequence>
+            </complexType>
+            <complexType name="GetInputMessageType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="QueueName" type="string"/>
+                    <element maxOccurs="1" minOccurs="0" name="MaxMessages">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="1"/>
+                                <maxInclusive value="10"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="WaitTime">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="-1"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element maxOccurs="1" minOccurs="0" name="PollingInterval">
+                        <simpleType>
+                            <restriction base="int">
+                                <minInclusive value="1"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="PutOutputMessageType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="MessageId" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="MessageAttributeType">
+                <sequence>
+                    <element name="Name" type="string"/>
+                    <element name="Type">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="String"/>
+                                <enumeration value="Number"/>
+                                <enumeration value="Binary"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                    <element name="Value" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="PermissionsType">
+                <sequence>
+                    <element name="Label" type="string"/>
+                    <element maxOccurs="10" minOccurs="1"
+                        name="AccountId" type="string"/>
+                    <element maxOccurs="6" minOccurs="1" name="Action">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="*"/>
+                                <enumeration value="SendMessage"/>
+                                <enumeration value="ReceiveMessage"/>
+                                <enumeration value="DeleteMessage"/>
+                                <enumeration value="ChangeMessageVisibility"/>
+                                <enumeration value="GetQueueAttributes"/>
+                                <enumeration value="GetQueueUrl"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="TopicPermissionsType">
+                <sequence>
+                    <element name="Label" type="string"/>
+                    <element maxOccurs="10" minOccurs="1"
+                        name="AccountId" type="string"/>
+                    <element maxOccurs="9" minOccurs="1" name="Action">
+                        <simpleType>
+                            <restriction base="string">
+                                <enumeration value="Publish"/>
+                                <enumeration value="Subscribe"/>
+                                <enumeration value="Receive"/>
+                                <enumeration value="GetTopicAttributes"/>
+                                <enumeration value="SetTopicAttributes"/>
+                                <enumeration value="AddPermission"/>
+                                <enumeration value="RemovePermission"/>
+                                <enumeration value="DeleteTopic"/>
+                                <enumeration value="ListSubscriptionsByTopic"/>
+                            </restriction>
+                        </simpleType>
+                    </element>
+                </sequence>
+            </complexType>
+            <complexType name="CreateTopicInType">
+                <sequence>
+                    <element name="Name" type="string"/>
+                    <element maxOccurs="unbounded" minOccurs="0"
+                        name="Permissions" type="tns:TopicPermissionsType"/>
+                </sequence>
+            </complexType>
+            <complexType name="CreateTopicOutType">
+                <sequence>
+                    <element name="TopicARN" type="string"/>
+                </sequence>
+            </complexType>
+            <complexType name="DestroyTopicInType">
+                <sequence>
+                    <!--element maxOccurs="1" minOccurs="0" name="TopicName" type="string"/-->
+                    <element name="TopicARN" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ReceiveOut" type="tns:RecOutputMessageType"/>
+            <element name="PutIn" type="tns:PutInputBatchType"/>
+            <element name="PutOut" type="tns:PutOutputMessageType"/>
+            <element name="PublishIn" type="tns:PublishInputType"/>
+            <element name="PublishOut" type="tns:PutOutputMessageType"/>
+            <element name="GetIn" type="tns:GetInputMessageType"/>
+            <element name="GetOut" type="tns:GetOutputMessageType"/>
+            <element name="SQSException" type="tns:SQSExceptionType"/>
+            <element name="CreateQueueIn" type="tns:CreateQueueInType"/>
+            <element name="CreateQueueOut" type="tns:CreateQueueOutType"/>
+            <element name="DeleteQueueIn" type="tns:DeleteQueueInType"/>
+            <element name="InquireQueueIn" type="tns:InquireQueueInType"/>
+            <element name="InquireQueueOut" type="tns:InquireQueueOutType"/>
+            <element name="ViewAllQueuesIn" type="tns:ViewAllQueuesInType"/>
+            <element name="ViewAllQueuesOut" type="tns:ViewAllQueuesOutType"/>
+            <element name="DestroyTopicIn" type="tns:DestroyTopicInType"/>
+            <element name="CreateTopicIn" type="tns:CreateTopicInType"/>
+            <element name="CreateTopicOut" type="tns:CreateTopicOutType"/>
+        </schema>
+        <schema
+            targetNamespace="activity.jsonRender.output+8a59d4ee-5ea9-4959-9530-82bf305c9913+ActivityOutputType"
+            xmlns="http://www.w3.org/2001/XMLSchema" xmlns:tns="activity.jsonRender.output+8a59d4ee-5ea9-4959-9530-82bf305c9913+ActivityOutputType">
+            <complexType name="ActivityOutputClassType">
+                <sequence>
+                    <element maxOccurs="1" minOccurs="1"
+                        name="jsonString" type="string"/>
+                </sequence>
+            </complexType>
+            <element name="ActivityOutputClass" type="tns:ActivityOutputClassType"/>
+        </schema>
+        <xs:schema attributeFormDefault="unqualified"
+            elementFormDefault="qualified"
+            targetNamespace="http://tns.tibco.com/bw/activity/timer/xsd/output"
+            xmlns:tns="http://tns.tibco.com/bw/activity/timer/xsd/output" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+            <xs:complexType name="TimerOutputSchemaType">
+                <xs:sequence>
+                    <xs:element form="unqualified" name="Now" type="xs:long"/>
+                    <xs:element form="unqualified" name="Hour" type="xs:int"/>
+                    <xs:element form="unqualified" name="Minute" type="xs:int"/>
+                    <xs:element form="unqualified" name="Second" type="xs:int"/>
+                    <xs:element form="unqualified" name="Week" type="xs:int"/>
+                    <xs:element form="unqualified" name="Month" type="xs:int"/>
+                    <xs:element form="unqualified" name="Year" type="xs:int"/>
+                    <xs:element form="unqualified" name="Date" type="xs:date"/>
+                    <xs:element form="unqualified" name="Time" type="xs:string"/>
+                    <xs:element form="unqualified" name="DayOfMonth" type="xs:int"/>
+                </xs:sequence>
+            </xs:complexType>
+            <xs:element name="TimerOutputSchema" type="tns:TimerOutputSchemaType"/>
+        </xs:schema>
+        <wsdl:definitions
+            targetNamespace="http://xmlns.example.com/20190505122644"
+            xmlns:tns="http://xmlns.example.com/20190505122644"
+            xmlns:vprop="http://docs.oasis-open.org/wsbpel/2.0/varprop"
+            xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:xsd="http://www.w3.org/2001/XMLSchema"/>
+    </tibex:Types>
+    <tibex:ProcessInfo callable="false" createdBy="tahir"
+        createdOn="Sun May 05 12:26:44 CST 2019" description=""
+        extraErrorVars="false" modifiers="public"
+        productVersion="6.4.2 V32 2017-11-05" scalable="true"
+        singleton="true" stateless="false" type="IT"/>
+    <tibex:ProcessInterface context="" input="" output=""/>
+    <tibex:ProcessTemplateConfigurations/>
+    <notation:Diagram measurementUnit="Pixel" type="BWProcess"
+        xmlns:bwnotation="http://tns.tibco.com/bw/runtime/BWNotation"
+        xmlns:notation="http://www.eclipse.org/gmf/runtime/1.0.2/notation" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+        <children type="2001">
+            <children type="5001"/>
+            <children type="3001">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+                <element href="//0/@process"/>
+            </children>
+            <children type="3002">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+            </children>
+            <children type="3003">
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+            </children>
+            <children type="3004">
+                <children type="4018">
+                    <children type="3018">
+                        <children type="4020">
+                            <children type="3020">
+                                <children type="4005">
+                                    <children type="3007">
+                                    <children type="4002">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.0"/>
+                                    <layoutConstraint x="306"
+                                    xsi:type="notation:Bounds" y="18"/>
+                                    </children>
+                                    <children type="4002">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.1"/>
+                                    <layoutConstraint x="154"
+                                    xsi:type="notation:Bounds" y="18"/>
+                                    </children>
+                                    <children type="4002">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.2"/>
+                                    <layoutConstraint x="-12"
+                                    xsi:type="notation:Bounds" y="18"/>
+                                    </children>
+                                    <children type="4002">
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <children type="4017">
+                                    <styles
+                                    fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <layoutConstraint xsi:type="notation:Bounds"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles
+                                    backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <element href="//0/@process/@activity/@activity/@activities.3"/>
+                                    <layoutConstraint x="-146"
+                                    xsi:type="notation:Bounds" y="27"/>
+                                    </children>
+                                    <styles xsi:type="notation:DrawerStyle"/>
+                                    <styles xsi:type="notation:SortingStyle"/>
+                                    <styles xsi:type="notation:FilteringStyle"/>
+                                    <element href="//0/@process/@activity/@activity"/>
+                                    </children>
+                                    <styles fontName="Segoe UI"
+                                    lineColor="0" xsi:type="notation:ShapeStyle"/>
+                                    <styles backgroundColor="16777215"
+                                    gradientEndColor="50431"
+                                    gradientStartColor="16777215" xsi:type="bwnotation:BackgroundStyle"/>
+                                    <styles xsi:type="bwnotation:ResizingStyle"/>
+                                    <element href="//0/@process/@activity/@activity"/>
+                                    <layoutConstraint height="384"
+                                    width="515" xsi:type="notation:Bounds"/>
+                                </children>
+                                <styles xsi:type="notation:SortingStyle"/>
+                                <styles xsi:type="notation:FilteringStyle"/>
+                            </children>
+                            <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+                            <styles xsi:type="bwnotation:BackgroundStyle"/>
+                            <styles xsi:type="bwnotation:ResizingStyle"/>
+                            <element href="//0/@process/@activity"/>
+                            <layoutConstraint height="365" width="444"
+                                x="30" xsi:type="notation:Bounds" y="20"/>
+                        </children>
+                        <styles xsi:type="notation:SortingStyle"/>
+                        <styles xsi:type="notation:FilteringStyle"/>
+                        <element href="//0/@process/@activity"/>
+                    </children>
+                    <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+                    <styles xsi:type="bwnotation:BackgroundStyle"/>
+                    <styles xsi:type="bwnotation:ResizingStyle"/>
+                    <element href="//0/@process/@activity"/>
+                    <layoutConstraint height="409" width="519" xsi:type="notation:Bounds"/>
+                </children>
+                <styles xsi:type="notation:SortingStyle"/>
+                <styles xsi:type="notation:FilteringStyle"/>
+                <element href="//0/@process"/>
+            </children>
+            <styles fontName="Segoe UI" lineColor="0" xsi:type="notation:ShapeStyle"/>
+            <element href="//0/@process"/>
+            <layoutConstraint height="460" width="860" xsi:type="notation:Bounds"/>
+        </children>
+        <styles xsi:type="notation:DiagramStyle"/>
+        <element href="//0"/>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.0"/>
+            <bendpoints points="[25, -2, -123, 10]$[124, -10, -24, 2]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.1" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.1"/>
+            <bendpoints points="[25, -2, -88, 9]$[89, -9, -24, 2]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+        <edges
+            source="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.3"
+            target="//@children.0/@children.4/@children.0/@children.0/@children.0/@children.0/@children.0/@children.0/@children.2" type="4006">
+            <children type="6002">
+                <layoutConstraint xsi:type="notation:Location" y="40"/>
+            </children>
+            <styles lineColor="0" xsi:type="notation:ConnectorStyle"/>
+            <styles fontName="Segoe UI" xsi:type="notation:FontStyle"/>
+            <element href="//0/@process/@activity/@activity/@links/@children.2"/>
+            <bendpoints points="[25, -3, -125, 14]$[126, -14, -24, 3]" xsi:type="notation:RelativeBendpoints"/>
+        </edges>
+    </notation:Diagram>
+    <tibex:NamespaceRegistry enabled="true">
+        <tibex:namespaceItem
+            namespace="http://www.tibco.com/namespaces/tnt/plugins/generalactivities/mapper/1557081059888" prefix="tns"/>
+        <tibex:namespaceItem
+            namespace="http://www.tibco.tci.com/SQSSchema" prefix="tns1"/>
+        <tibex:namespaceItem
+            namespace="http://www.example.org/NewXMLSchema" prefix="tns2"/>
+        <tibex:namespaceItem
+            namespace="http://tns.tibco.com/bw/activity/parse/xsd/+51fdfb96-a930-4c49-8241-1a9194b02996+input" prefix="tns3"/>
+    </tibex:NamespaceRegistry>
+    <bpws:import importType="http://www.w3.org/2001/XMLSchema" namespace="http://www.example.org/NewXMLSchema"/>
+    <bpws:variables>
+        <bpws:variable element="ns:ProcessContext"
+            name="_processContext" sca-bpel:internal="true"/>
+        <bpws:variable element="ns2:PutIn" name="PutQueueMessage-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns2:PutOut" name="PutQueueMessage" sca-bpel:internal="true"/>
+        <bpws:variable name="sqsclientProperty"
+            sca-bpel:hotUpdate="false" sca-bpel:privateProperty="true"
+            sca-bpel:property="yes"
+            sca-bpel:sharedResourceType="{http://ns.tibco.com/tci/sharedresource/sqsclient}SQSClientConfiguration" type="xsd:string">
+            <bpws:from>
+                <bpws:literal>sqs.AmazonSQSSNSConnectionResource</bpws:literal>
+            </bpws:from>
+        </bpws:variable>
+        <bpws:variable element="ns4:Fullname" name="RenderJSON-input" sca-bpel:internal="true"/>
+        <bpws:variable element="ns5:ActivityOutputClass"
+            name="RenderJSON" sca-bpel:internal="true"/>
+        <bpws:variable name="dataFormatResource"
+            sca-bpel:hotUpdate="false" sca-bpel:privateProperty="true"
+            sca-bpel:property="yes"
+            sca-bpel:sharedResourceType="{http://ns.tibco.com/bw/palette/dataformat}DataFormat" type="xsd:string">
+            <bpws:from>
+                <bpws:literal>sqs.DataFormatResource</bpws:literal>
+            </bpws:from>
+        </bpws:variable>
+        <bpws:variable element="ns4:Fullname" name="Variable"/>
+        <bpws:variable element="ns4:Fullname" name="Variable1"/>
+        <bpws:variable element="ns8:TimerOutputSchema" name="Timer" sca-bpel:internal="true"/>
+    </bpws:variables>
+    <bpws:extensions>
+        <bpws:extension mustUnderstand="no" namespace="http://www.eclipse.org/gmf/runtime/1.0.2/notation"/>
+        <bpws:extension mustUnderstand="no" namespace="http://www.tibco.com/bw/process/info"/>
+        <bpws:extension mustUnderstand="no" namespace="http://docs.oasis-open.org/ns/opencsa/sca-bpel/200801"/>
+        <bpws:extension mustUnderstand="no" namespace="http://docs.oasis-open.org/ns/opencsa/sca/200912"/>
+        <bpws:extension mustUnderstand="no" namespace="http://ns.tibco.com/bw/property"/>
+        <bpws:extension mustUnderstand="no" namespace="http://www.tibco.com/bpel/2007/extensions"/>
+    </bpws:extensions>
+    <bpws:scope name="scope">
+        <bpws:flow name="flow">
+            <bpws:links>
+                <bpws:link name="RenderJSONToPutQueueMessage" tibex:linkType="SUCCESS"/>
+                <bpws:link name="AssignToRenderJSON" tibex:linkType="SUCCESS"/>
+                <bpws:link name="TimerToAssign" tibex:linkType="SUCCESS"/>
+            </bpws:links>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    inputVariable="PutQueueMessage-input"
+                    name="PutQueueMessage"
+                    outputVariable="PutQueueMessage"
+                    tibex:xpdlId="e3dbd887-2466-4923-afd5-ac66de22cfd1" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="RenderJSONToPutQueueMessage"/>
+                    </bpws:targets>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns1=&quot;http://www.tibco.tci.com/SQSSchema&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;RenderJSON&quot;/>&lt;xsl:template name=&quot;PutQueueMessage-input&quot; match=&quot;/&quot;>&lt;tns1:PutIn>&lt;tns1:QueueName>&lt;xsl:value-of select=&quot;&amp;quot;SQS&amp;quot;&quot;/>&lt;/tns1:QueueName>&lt;tns1:SqsMessage>&lt;tns1:Body>&lt;xsl:value-of select=&quot;$RenderJSON/jsonString&quot;/>&lt;/tns1:Body>&lt;/tns1:SqsMessage>&lt;/tns1:PutIn>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.sqs.putActivity"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:sqs="http://ns.tibco.com/tci/plugin/aws/sqs/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/tci/plugin/aws/sqs/#//SqsPut"/>
+                                    <value
+                                    clientConfig="sqsclientProperty" xsi:type="sqs:SqsPut"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension
+                    inputVariable="RenderJSON-input" name="RenderJSON"
+                    outputVariable="RenderJSON"
+                    tibex:xpdlId="8a59d4ee-5ea9-4959-9530-82bf305c9913" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="AssignToRenderJSON"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="RenderJSONToPutQueueMessage"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.example.org/NewXMLSchema&quot; version=&quot;2.0&quot;>&lt;xsl:param name=&quot;Variable1&quot;/>&lt;xsl:template name=&quot;RenderJSON-input&quot; match=&quot;/&quot;>&lt;xsl:for-each select=&quot;$Variable1&quot;>&lt;tns2:Fullname>&lt;tns2:First>&lt;xsl:value-of select=&quot;tns2:First&quot;/>&lt;/tns2:First>&lt;tns2:middle>&lt;xsl:value-of select=&quot;tns2:middle&quot;/>&lt;/tns2:middle>&lt;tns2:last>&lt;xsl:value-of select=&quot;tns2:last&quot;/>&lt;/tns2:last>&lt;/tns2:Fullname>&lt;/xsl:for-each>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.restjson.JsonRender"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:restjson="http://ns.tibco.com/bw/palette/restjson" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/restjson#//JsonRender"/>
+                                    <value jsonOutputStyle="None"
+                                    schemaType="Xsd" xsi:type="restjson:JsonRender">
+                                    <inputEditorElement href="platform:/resource/SQS/Schemas/Names.xsd#//Fullname;XSDElementDeclaration=3"/>
+                                    </value>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:activityExtension inputVariable="Variable1"
+                    name="Assign" outputVariable="Variable1"
+                    tibex:xpdlId="3d926ebe-5a57-4a59-a666-937b2beaae94" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:targets>
+                        <bpws:target linkName="TimerToAssign"/>
+                    </bpws:targets>
+                    <bpws:sources>
+                        <bpws:source linkName="AssignToRenderJSON"/>
+                    </bpws:sources>
+                    <tibex:inputBindings>
+                        <tibex:inputBinding
+                            expression="&lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?>&#xa;&lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:tns2=&quot;http://www.example.org/NewXMLSchema&quot; version=&quot;2.0&quot;>&lt;xsl:template name=&quot;Variable1&quot; match=&quot;/&quot;>&lt;tns2:Fullname>&lt;tns2:First>&lt;xsl:value-of select=&quot;'tahir'&quot;/>&lt;/tns2:First>&lt;tns2:middle>&lt;xsl:value-of select=&quot;'ismail'&quot;/>&lt;/tns2:middle>&lt;tns2:last>&lt;xsl:value-of select=&quot;'vohra'&quot;/>&lt;/tns2:last>&lt;/tns2:Fullname>&lt;/xsl:template>&lt;/xsl:stylesheet>" expressionLanguage="urn:oasis:names:tc:wsbpel:2.0:sublang:xslt1.0"/>
+                    </tibex:inputBindings>
+                    <tibex:config>
+                        <bwext:BWActivity
+                            activityTypeID="bw.generalactivities.bwassign"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//BWAssign"/>
+                                    <value processVariable="Variable1" xsi:type="generalactivities:BWAssign"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:config>
+                </tibex:activityExtension>
+            </bpws:extensionActivity>
+            <bpws:extensionActivity>
+                <tibex:receiveEvent createInstance="yes"
+                    eventTimeout="60" name="Timer"
+                    tibex:xpdlId="b684f263-0726-41c2-81a6-69e2f3bae8c9"
+                    variable="Timer" xmlns:tibex="http://www.tibco.com/bpel/2007/extensions">
+                    <bpws:sources>
+                        <bpws:source linkName="TimerToAssign"/>
+                    </bpws:sources>
+                    <tibex:eventSource>
+                        <bwext:BWActivity
+                            activityTypeID="bw.generalactivities.timer"
+                            version="6.0.0.001"
+                            xmlns:activityconfig="http://tns.tibco.com/bw/model/activityconfig"
+                            xmlns:bwext="http://tns.tibco.com/bw/model/core/bwext"
+                            xmlns:generalactivities="http://ns.tibco.com/bw/palette/generalactivities" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+                            <activityConfig>
+                                <properties name="config" xsi:type="activityconfig:EMFProperty">
+                                    <type href="http://ns.tibco.com/bw/palette/generalactivities#//Timer"/>
+                                    <value
+                                    endTime="2019-05-05T13:51:34.257-0600"
+                                    intervalUnit="Second"
+                                    runOnce="true"
+                                    startTime="2019-05-05T13:51:34.257-0600"
+                                    timeInterval="1" xsi:type="generalactivities:Timer"/>
+                                </properties>
+                            </activityConfig>
+                        </bwext:BWActivity>
+                    </tibex:eventSource>
+                </tibex:receiveEvent>
+            </bpws:extensionActivity>
+        </bpws:flow>
+    </bpws:scope>
+</bpws:process>

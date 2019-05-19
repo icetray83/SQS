@@ -1,0 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<session version="1.0">
+<refactoring comment="Rename resource &apos;SQS/Schemas/NewXMLSchema.xsd&apos; to &apos;Names.xsd&apos;" description="Rename resource &apos;NewXMLSchema.xsd&apos;" flags="7" id="org.eclipse.ltk.core.refactoring.rename.resource" input="Schemas/NewXMLSchema.xsd" name="Names.xsd" stamp="1557083135174" updateReferences="true"/>
+</session>

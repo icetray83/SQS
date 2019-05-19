@@ -1,0 +1,5 @@
+{"records": [{
+    "jsonSchemaLocation": "/SQS/Service Descriptors/sqs.restService-Fullname.json",
+    "conversionType": "linked",
+    "xsdSchemaTargetNamespace": "http://www.example.org/NewXMLSchema"
+}]}
